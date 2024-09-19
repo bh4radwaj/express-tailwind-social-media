@@ -2,3 +2,4 @@ node_modules/
 libssl1.1_1.1.1n-0+deb10u3_amd64.deb
 mongodb-compass_1.44.3_amd64.deb
 bin/
+.vercel
