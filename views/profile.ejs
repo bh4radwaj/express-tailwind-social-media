@@ -1,0 +1,461 @@
+<%- include ('./header') %>
+ <style>
+    body{
+      position: absolute;
+      width: 100%;
+      height: 100%;
+    }
+    .modal {
+      transition: opacity .75s ease;
+    }
+    body.modal-active {
+      overflow-x: hidden;
+      overflow-y: visible !important;
+    }
+    #appear_img_div{
+      width: 100%;
+      height: 100%;
+      position: fixed;
+      top:0%;
+      /* opacity: 0.85; */
+      background-color: rgba(0, 0, 0,.8);
+    }
+    #pop-up{
+      transition: all 2s;
+      background-color: rgba(220, 227, 235, 0.75);
+      width: 25%;
+      height: 74%;
+      position: absolute;
+      top:20%;
+      left:38%;
+    }
+
+    #pop-up-edit{
+      transition: all 2s;
+      background-color: rgba(220, 227, 235, 0.75);
+      width: 50%;
+      height: 65%;
+      position: absolute;
+      top:20%;
+      left:25%;
+    }
+    #prof-form{
+      margin-left: 10rem;
+    }
+    @media (max-width: 600px){
+      #pop-up{
+        top:15%;
+        width: 78%; 
+        height:80%; 
+        left:10%;
+      }
+      .modal-container{
+        margin-top: 50rem;
+        margin-bottom: 50rem;
+      }
+      .modal{
+        top:-100%;
+      }
+      #img-div{
+        margin-top: -100px;
+      }
+
+      #pop-up-edit{
+        top:17%;
+        width: 78%; 
+        height:80%; 
+        left:10%;
+      }
+      #prof-form{
+        margin-left: 0rem;
+      }
+    }
+    @media(min-width: 1200px){
+      #prof-email{
+        display: none;
+      }
+      #img-div{
+        margin-left: 10%;
+        margin-top: 10%;
+      }
+      #prof-form{
+        margin-left:10%;
+      }
+    }
+    @media (max-width: 800px){
+      #editbt{
+        margin-bottom: 2rem;
+      }
+    }
+
+
+svg{
+    position: relative;
+    top:20%;
+    left:20%;
+    width: 149px;
+    height: 149px;
+    animation: rotate 2s linear infinite;
+}
+
+svg circle{
+    width: 100%;
+    height: 100%;
+    fill:none;
+    stroke-width: 10;
+    stroke: #891dd1;
+    stroke-linecap: round;
+    transform: translate(5px,5px);
+    stroke-dasharray: 440;
+    stroke-dashoffset: 440;
+    animation: animate .9s linear infinite;
+}
+
+@keyframes rotate{
+    0%{
+        transform: rotate(0deg);
+
+    }
+    100%{
+        transform: rotate(360deg);
+    }
+}
+@keyframes animate{
+    0%,100%{
+        stroke-dashoffset: 440;
+    }
+    50%{
+        stroke-dashoffset: 0;
+    }
+    50.1%{
+        stroke-dashoffset: 880;
+    }
+}
+
+
+
+</style>
+<script>
+  function closediv(){
+    document.getElementById('appear_img_div').remove()
+  }
+  function editpop(){
+
+    var appear_img = `<div id='appear_img_div'>
+        <div id="pop-up-edit" class="justify-start p-2 rounded-lg sm:flex">
+          <svg>
+            <circle cx="70" cy="70" r="70"></circle>
+          </svg>
+        </div>
+    </div>`;
+    $('body').append(appear_img);
+    xhr = new XMLHttpRequest();
+    xhr.open("POST","/get-prof",true);
+    xhr.onload = function(){
+      resp = JSON.parse(xhr.responseText);
+      document.getElementById('pop-up-edit').innerHTML = `
+          
+        <div class="flex justify-center pb-8" id="img-div">
+          <img style="border: .5px dotted black;" src="/other_imgs/${resp.img}" alt="" class="w-56 h-56 rounded-l-full rounded-r-full shadow-2xl img">
+        </div>
+        <div id="prof-email" class="font-mono text-xl text-gray-600" style="text-align:center">${resp.email}</div>
+
+      <form id="prof-form" action="/edit-profile" class="p-4 pb-4 mb-4 shadow-2xl lg:ml-20 lg:-mr-10 bg-opacity-50" method="POST" enctype="multipart/form-data">
+        <label class="block pb-4 font-mono text-gray-700">Username</label>
+        <div class="pb-4 mb-3">
+          <input value="${resp.uid}" name="uid" type="text" class="w-full px-2 py-2 leading-tight text-gray-700 bg-white border rounded shadow appearance-none focus:border-blue-300 bg-opacity-50" placeholder="Enter Username"> 
+          <!-- <span class="text-red-600 font-sm">fill this field</span> -->
+        </div>
+        <div class="pb-4 mb-3">
+          <label class="block font-mono text-gray-700">Password</label>
+          <input name="password" type="password" class="w-full px-2 py-2 leading-tight text-gray-700 bg-white border rounded shadow appearance-none focus:border-blue-300 mb bg-opacity-50" placeholder="Enter Password">
+          <!-- <span class="text-red-600 font-sm">fill this field</span> -->
+        </div>
+
+          <!-- <span class="font-medium text-red-600">fill this field</span> -->
+        
+        <div class="flex justify-between pb-4">
+          <input type="file" name="img" class="w-32">
+          <button onclick="closediv();" class="px-2 text-lg text-white bg-indigo-800 border rounded-md">close</button>
+          <input class="px-2 font-sans text-lg text-white bg-blue-700 border rounded-md" type="submit" value="ok">
+        </div>
+      </form>
+      `;
+    }
+    xhr.send();
+
+  }
+  function pop(id){
+    var src = document.getElementById(id).attributes.src;
+    console.log(src);
+
+
+    var appear_img = `<div id='appear_img_div'>
+        <div id="pop-up" class="p-2 rounded-lg">
+          <svg>
+            <circle cx="70" cy="70" r="70"></circle>
+          </svg>
+        </div>
+    </div>`;
+    $('body').append(appear_img);
+
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST","/get-post-data/"+id,true);
+    xhr.onload = function(){
+      var resp = JSON.parse(xhr.responseText);
+      console.log(resp.likeok)
+      if(resp.likeok){
+        document.getElementById('pop-up').innerHTML = `
+            <div class="flex justify-between">
+              <div class="flex justify-start">
+                <img src='/other_imgs/${resp.prof_img}' class="w-12 h-12 rounded-l-full rounded-r-full" style="border: .5px dotted black">
+                <div class="mt-4 ml-4 font-mono text-gray-800">${resp.uid}</div>
+              </div>
+
+              <div class="">
+                <span onclick='closediv();' class="text-2xl">&times</span>
+                <a class="ml-4" href="/post-delete/${resp.id}"><img src="/other_imgs/delete.png" class="h-8 rounded-l-full rounded-r-full"></a>
+                <button onclick="post_edit('${resp.id}')"><img src="/other_imgs/edit.png" class="h-8 rounded-l-full rounded-r-full"></button>
+              </div>
+            </div>
+            <div class="mt-2 text-grau-900 text-md">${resp.title}</div>
+            <div class="flex justify-center m-4">
+              <img src="${src.value}" style="" class="w-56 h-56 rounded-sm shadow-2xl">
+            </div>
+            <div class="flex justify-center font-mono text-md" style="text-align:center">
+              <div>${resp.body}</div>
+            </div>
+            <div class="flex justify-between">  
+              <div id="likes">${resp.likes} likes</div>
+              <div><button onclick="like('${id}');"><img id="likebt" class="w-10 h-10" src="/other_imgs/love.png"></button></div>
+            </div>`;
+          }
+          else{
+
+            document.getElementById('pop-up').innerHTML = `
+            <div class="flex justify-between">
+              <div class="flex justify-start">
+                <img src='/other_imgs/${resp.prof_img}' class="w-12 h-12 rounded-l-full rounded-r-full" style="border: .5px dotted black">
+                <div class="mt-4 ml-4 font-mono text-gray-800">${resp.uid}</div>
+              </div>
+              <div class="">
+                <span onclick='closediv();' class="text-2xl">&times</span>
+                <a class="ml-4" href="/post-delete/${resp.id}"><img src="/other_imgs/delete.png" class="h-8 rounded-l-full rounded-r-full"></a>
+                <button onclick="post_edit('${resp.id}')"><img src="/other_imgs/edit.png" class="h-8 rounded-l-full rounded-r-full"></button>
+              </div>
+            </div>
+            <div class="mt-2 text-grau-900 text-md">${resp.title}</div>
+            <div class="flex justify-center m-4">
+              <img src="${src.value}" style="" class="w-56 h-56 rounded-sm shadow-2xl">
+            </div>
+            <div class="flex justify-center font-mono text-md" style="text-align:center">
+              <div>${resp.body}</div>
+            </div>
+            <div class="flex justify-between">  
+              <div id="likes">${resp.likes} likes</div>
+              <div><button onclick="dislike('${id}');"><img id="likebt" class="w-10 h-10" src="/other_imgs/unlove.png"></button></div>
+            </div>`;
+          }
+    }
+    xhr.send();
+  }
+
+  function post_edit(id){
+    closediv();
+    xhr = new XMLHttpRequest();
+    xhr.open("POST","/post-edit-get/"+id,true);
+    xhr.onload = function(){
+      toggleModal();
+      resp = JSON.parse(xhr.responseText);
+      document.getElementsByName('title')[0].value = resp.title;
+      document.getElementsByName('body')[0].value = resp.body;
+      document.getElementById('toggleform').attributes.action.nodeValue = '/post-edit/'+id;
+    }
+    xhr.send();
+  }
+
+
+  function like(id){
+    document.getElementById('likebt').attributes.src.nodeValue = "/other_imgs/unlove.png";
+    document.getElementById('likebt').parentElement.attributes.onclick.nodeValue = `dislike('${id}')`;
+    likes = parseInt(document.getElementById('likes').innerHTML.split(' ')[0]);
+    likes+=1;
+    document.getElementById('likes').innerHTML = likes+' likes';
+    xhr = new XMLHttpRequest();
+    xhr.open("POST","/like/"+id,true);
+    xhr.send();
+  }
+
+
+
+  function dislike(id){
+    document.getElementById('likebt').parentElement.attributes.onclick.nodeValue = `like('${id}')`;
+    likes = parseInt(document.getElementById('likes').innerHTML.split(' ')[0]);
+    document.getElementById('likebt').attributes.src.nodeValue = "/other_imgs/love.png";
+    likes = parseInt(document.getElementById('likes').innerHTML.split(' ')[0]);
+    likes-=1;
+    document.getElementById('likes').innerHTML = likes+' likes';
+    xhr = new XMLHttpRequest();
+    xhr.open("POST","/dislike/"+id,true);
+    xhr.send();
+  }
+
+
+</script>
+
+  <!-- <div class="flex justify-between p-4 ml-5 ml-20 mr-20 text-indigo-800 bg-indigo-200 rounded-lg shadow-xl bg-opacity-50" id="flash">
+    <p class="font-mono">you have been logged in</p>
+
+      <div class="z-50 items-center text-sm text-black cursor-pointer modal-close">
+        <svg onclick="remove();" class="text-black fill-current" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18">
+          <path d="M14.53 4.53l-1.06-1.06L9 7.94 4.53 3.47 3.47 4.53 7.94 9l-4.47 4.47 1.06 1.06L9 10.06l4.47 4.47 1.06-1.06L10.06 9z"></path>
+        </svg>
+      </div>
+  </div> -->
+
+
+   <div class="pt-0 ml-56 mr-56 bg-indigo-100 border rounded-lg shadow-2xl prof bg-opacity-50" style="margin-top:9rem;">
+    <!-- <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quod tenetur expedita excepturi voluptatibus architecto soluta? Quo quam velit, magnam deleniti hic reiciendis suscipit labore ut voluptas, obcaecati ipsam libero officia.</p> -->
+    <div class="flex justify-center pb-8" style="margin-top: -100px;">
+      <img style="border: .5px dotted black;" src="/other_imgs/<%= profile.profileimg%>" alt="" class="w-64 h-64 rounded-l-full rounded-r-full shadow-2xl img">
+    </div>
+    <div class="p-20 pt-2 pb-0 uid" style="text-align: center;">
+      <div class="font-mono text-3xl text-black">
+        <%- user.uid %>
+      </div>
+      <div class="text-xl text-gray-700">
+        <%- user.email %>
+      </div>
+      <div class="justify-center mt-8 text-md sm:flex">
+        <!-- <div style="align-items:baseline"> -->
+          <button onclick="editpop();" class="px-10 py-1 text-white bg-indigo-600 rounded-sm" id="editbt">edit profile</button>
+          <!-- <button class="modal-open"><img class="w-10 h-10" src="/other_imgs/addpost.jpg" alt=""></button> -->
+          <button class="px-4 py-0 text-white bg-blue-800 rounded-sm modal-open">add-post</button>
+        <!-- </div> -->
+      </div>
+    </div>
+
+    <div class="p-10 mt-2 md:flex justify-evenly">
+      <div class="font-mono text-black items" style="text-align: center;">
+        <div class="text-xl">followers</div>
+        <div class="text-lg"><%= profile.followers %></div>
+      </div>
+      <div class="font-mono text-black items" style="text-align: center;">
+        <div class="text-xl">following</div>
+    <div class="text-lg"><%= profile.following %></div>
+      </div>
+      <div class="font-mono text-black items" style="text-align: center;">
+        <div class="text-xl">posts</div>
+        <div class="text-lg"><%= total_posts %></div>
+      </div>
+    </div>
+  </div>
+  <div style="text-align: center;" class="mt-10">
+    <a href="/search" class="p-2 -mb-4 text-xl text-white bg-red-700 rounded-lg mt-54">search</a>
+  </div>  
+
+  <div class="mt-24 grid lg:grid-cols-4 grid-cols-3 lg:ml-56 lg:mr-64 md:mr-20 md:ml-20" style="margin-bottom: -28rem;">
+    <% for(let i=0; i<posts.length; i++){ %>
+      <div class="p-2 md:p-4" name="<%= posts[i]._id %>">
+        <img id="<%= posts[i]._id %>" src="/posts/<%= posts[i].img %>" onclick="pop('<%= posts[i]._id %>');" alt="" class="z-50 shadow-2xl rounded-md h-42 w-42 modal-active">
+      </div>
+    <% } %>  
+  </div>
+
+  
+  <div id="add-post-modal" class="relative left-0 flex items-center w-full h-full opacity-0 pointer-events-none modal sm:fixed sm:top-0">
+    <div class="absolute w-full h-full bg-gray-900 opacity-50 modal-overlay"></div>
+    
+    <div class="z-50 w-full mx-auto mt-64 mb-64 overflow-y-auto bg-white rounded shadow-lg modal-container md:ml-56 md:mr-56 sm:mt-56 sm:mb-56">
+      
+      <!-- <div class="absolute top-0 right-0 z-50 flex flex-col items-center mt-4 mr-4 text-sm text-white cursor-pointer modal-close">
+        <svg class="text-white fill-current" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18">
+          <path d="M14.53 4.53l-1.06-1.06L9 7.94 4.53 3.47 3.47 4.53 7.94 9l-4.47 4.47 1.06 1.06L9 10.06l4.47 4.47 1.06-1.06L10.06 9z"></path>
+        </svg>
+        <span class="text-sm">(Esc)</span>
+      </div> -->
+
+      <!-- Add margin if you want to see some of the overlay behind the modal-->
+      <div class="px-6 py-4 mt-8 text-left modal-content sm:mt-0">
+       <form id="toggleform" action="/addpost" class="pb-4 -mb-2 bg-white rounded-md bg-opacity-50" method="POST" enctype="multipart/form-data">
+        <!-- <div class="flex justify-center pb-4">
+          <img src="./login.png" alt="" class="w-24 pr-2">
+          <div class="pr-3 font-mono text-lg text-3xl font-bold text-gray-800">add post</div>
+        </div>
+        <hr> -->
+        <span onclick="toggleModal();" class="float-right text-xl">&times</span>
+        <label class="block pb-4 font-mono text-gray-700">title</label>
+        <div class="pb-4 mb-3">
+          <input name="title" type="text" class="w-full px-2 py-2 leading-tight text-gray-700 bg-white border rounded shadow appearance-none focus:border-blue-300 bg-opacity-50" placeholder="Enter title for the post"> 
+          <!-- <span class="text-red-600 font-sm">fill this field</span> -->
+        </div>
+        <div class="pb-4 mb-3">
+          <label class="block font-mono text-gray-700">content</label>
+          <textarea id="bd" name="body" type="text" class="w-full h-40 px-2 py-2 text-gray-700 bg-white border rounded shadow focus:border-blue-300 mb bg-opacity-50" placeholder="type content for the post"></textarea>
+          <!-- <span class="text-red-600 font-sm">fill this field</span> -->
+        </div>
+          <!-- <span class="font-medium text-red-600">fill this field</span> -->
+        
+        <div class="pb-4 ">
+          <input type="file" name="img">
+          <input class="float-right px-2 py-1 font-sans text-lg text-white bg-blue-700 border rounded-md" type="submit" value="post">
+        </div>
+      </form>
+ 
+        <!--Footer-->
+        <!-- <div class="flex justify-end pt-2">
+          <button class="p-3 px-4 mr-2 text-indigo-500 bg-transparent rounded-lg hover:bg-gray-100 hover:text-indigo-400">Action</button>
+          <button class="p-3 px-4 text-white bg-indigo-500 rounded-lg modal-close hover:bg-indigo-400">Close</button>
+        </div> -->
+      </div>
+    </div>
+  </div>
+
+
+  <script>
+    CKEDITOR.replace('body');
+    var openmodal = document.querySelectorAll('.modal-open')
+    for (var i = 0; i < openmodal.length; i++) {
+      openmodal[i].addEventListener('click', function(event){
+    	event.preventDefault()
+    	toggleModal()
+      })
+    }
+    
+    const overlay = document.querySelector('.modal-overlay')
+    overlay.addEventListener('click', toggleModal)
+    
+    var closemodal = document.querySelectorAll('.modal-close')
+    for (var i = 0; i < closemodal.length; i++) {
+      closemodal[i].addEventListener('click', toggleModal)
+    }
+    
+    document.onkeydown = function(evt) {
+      evt = evt || window.event
+      var isEscape = false
+      if ("key" in evt) {
+    	isEscape = (evt.key === "Escape" || evt.key === "Esc")
+      } else {
+    	isEscape = (evt.keyCode === 27)
+      }
+      if (isEscape && document.body.classList.contains('modal-active')) {
+    	toggleModal()
+      }
+    };
+    
+    
+    function toggleModal () {
+      const body = document.querySelector('body')
+      const modal = document.querySelector('.modal')
+      modal.classList.toggle('opacity-0')
+      modal.classList.toggle('pointer-events-none')
+      body.classList.toggle('modal-active')
+    }
+    
+  </script>
+
+
+
+
+
+

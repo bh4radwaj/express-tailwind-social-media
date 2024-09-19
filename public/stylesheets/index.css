@@ -1,0 +1,156 @@
+*{
+    padding: 0;
+    margin: 0;
+    text-decoration: none;
+    list-style: none;
+    box-sizing: border-box;
+}
+
+body{
+    font-family: monospace;
+    /* background-image: url('/other_imgs/2.jpg'); */
+}
+nav{
+    /* background: #0082e6; */
+    height: 80px;
+    width: 100%;
+}
+label.logo{
+    /* color: white; */
+    font-size: 35px;
+    line-height: 80px;
+    padding: 0 100px;
+    font-weight: bold;
+}
+nav ul{
+    float: right;
+    margin-right: 20px;
+}
+
+nav ul li{
+    display: inline-block;
+    line-height: 80px;
+    margin: 0 5px;
+}
+nav ul li a{
+    /* color: white; */
+    font-size: 20px;
+    text-transform: lowercase;
+
+}
+span{
+    cursor: pointer;
+}
+
+#let_hide{
+    display: none;
+}
+.btn{
+    font-size: 30px;
+    color: rgb(56, 54, 54);
+    float: right;
+    line-height: 80px;
+    background: none;
+    margin-right: 40px;
+    cursor: pointer;
+    display: none;
+}
+
+@media (max-width: 952px){
+    label.logo{
+        font-size: 30px;
+        padding-left: 10px;
+    }
+    nav ul li a{
+        font-size: 16px;
+
+    }
+}
+@media (min-width: 800px){
+    #cls{
+        /* display: none; */
+        visibility: hidden;
+    }
+    ul{
+        margin-top:-28px;
+    }
+}
+@media (max-width: 400px){
+    .uid{
+        padding-left: 0;
+        padding-right: 0;
+    }
+}
+@media (max-width: 858px){
+    .pp{
+        width: 80%;
+    }
+    .about{
+        margin:auto;
+    }
+    .centr{
+        margin-top: 14rem;
+    }
+    .hero{
+        height: 20rem;
+        width: 26rem;
+    }
+    #cont{
+        height: 6rem;
+        width: 6rem;
+    }
+    .saying{
+        width: 20rem;
+    }
+    .btn{
+        display: inline-flex;
+        /* background-attachment: fixed; */
+    }
+    #acc{
+        display: none;
+    }
+    #let_hide{
+        display: initial;
+    }
+    ul{
+        position: fixed;
+        width: 100%;
+        height: 100vh;
+        background:white;
+        /* top:80px; */
+        /* left: -100%; */
+        left: -100%;
+        text-align: center;
+        transition: all 1s;
+    }
+    ul li{
+        position: relative;
+        left:-7rem;
+        width:100%;
+    }
+    ul li:hover{
+        background:#efeded;
+    }
+    /* a/{ */
+        /* margin-left: 50%; */
+    /* }/ */
+    .img{
+        height: 13rem;
+        width: 13rem;
+    }
+    .prof{
+        margin-left: 10%;
+        margin-right: 8%;
+    }
+    .items{
+        padding-bottom: 28px;
+    }
+    nav ul li{
+        display: block;
+        margin-left: 30%;
+        margin-right: 30%;
+    }
+    nav ul li a{
+        font-size: 20px;
+    }
+}

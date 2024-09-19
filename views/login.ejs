@@ -1,0 +1,31 @@
+<%- include ('./header') %>
+
+
+  <div class="text-gray-700">
+    <div class="ml-5 mr-5 lg:px-56">
+      <form action="/login" class="p-4 pb-4 mb-4 bg-white shadow-2xl rounded-md bg-opacity-50" method="POST">
+        <div class="flex justify-center pb-4">
+          <!-- <img src="./login.png" alt="" class="w-24 pr-2"> -->
+          <div class="pr-3 font-mono text-lg text-3xl font-bold text-gray-800">sign-in</div>
+        </div>
+        <label class="block pb-4 font-mono text-gray-700">Username</label>
+        <div class="pb-4 mb-3">
+          <input name="uid" type="text" class="w-full px-2 py-2 leading-tight text-gray-700 bg-white border rounded shadow appearance-none focus:border-blue-300 bg-opacity-50" placeholder="Enter Username">
+          <!-- <span class="text-red-600 font-sm">fill this field</span> -->
+        </div>
+        <div class="pb-4 mb-3">
+          <label class="block font-mono text-gray-700">Password</label>
+          <input name="password" type="password" class="w-full px-2 py-2 leading-tight text-gray-700 bg-white border rounded shadow appearance-none focus:border-blue-300 mb bg-opacity-50" placeholder="Enter Password">
+          <!-- <span class="text-red-600 font-sm">fill this field</span> -->
+        </div>
+          <!-- <span class="font-medium text-red-600">fill this field</span> -->
+
+        <div class="pb-4 ">
+          <input class="px-2 py-1 font-sans text-lg text-white bg-blue-700 border rounded-md" type="submit" value="sing-in">
+          <a href="/register" class="float-right mt-1 text-sm font-bold text-blue-800">Dont have an account?</a>
+        </div>
+      </form>
+    </div>
+
+    <br><br>
+  </div>
